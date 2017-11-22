@@ -17,20 +17,19 @@ public class ClientThread extends Thread {
 
     byte[] buffer = new byte[256];
     InetAddress serverAddress;
-    int port = 3000;
-
+    int serverPort = 3000;
+    int port = 4000;
 
     public ClientThread(String name) {
         super(name);
         try {
-            clientSocket = new DatagramSocket(3000);
+            clientSocket = new DatagramSocket(port);
             clientSocket.setSoTimeout(1000);
             serverAddress = InetAddress.getByName("127.0.0.1");
-            clientSocket = new DatagramSocket();
         } catch (SocketException e) {
-            //
+            e.printStackTrace();
         } catch (UnknownHostException e) {
-            //e.printStackTrace();
+            e.printStackTrace();
         }
     }
 
@@ -42,7 +41,7 @@ public class ClientThread extends Thread {
             lastMessage = messageQueue.take();
             sendMessage(lastMessage);
 
-            DatagramPacket packet = new DatagramPacket(buffer, buffer.length, serverAddress, 3000);
+            DatagramPacket packet = new DatagramPacket(buffer, buffer.length, serverAddress, serverPort);
 
             clientSocket.receive(packet);
             String request = new String(packet.getData());
